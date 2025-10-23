@@ -22,12 +22,6 @@
       max-width: 400px;
       margin-top: 20px;
     }
-    .controls {
-      margin-top: 10px;
-    }
-    .q{
-        font-size: larger;
-    }
     button {
       background-color: #0088cc;
       border: none;
@@ -43,17 +37,18 @@
 </head>
 <body>
   <h2>🎧 پخش‌کننده موزیک تلگرام</h2>
-  <p class="q">فعلا فقط حبیب داریم تا بعد</p>
+  <p>فعلاً فقط حبیب داریم تا بعد 😄</p>
 
   <p id="track-name">در حال پخش: آهنگ اول</p>
-  <audio id="player" controls>
+  <audio id="player" controls preload="none">
     <source id="audioSource" src="https://irsv.upmusics.com/dlw/Habib%20-%203%20Rooze%20Raftee%20(320).mp3" type="audio/mp3">
-    مرورگر شما از پخش موزیک پشتیبانی نمی‌کند.
   </audio>
 
+  <button id="start" onclick="startPlayer()" ontouchstart="startPlayer()">▶️ شروع پخش</button>
+
   <div class="controls">
-    <button onclick="prev()">⏮ قبلی</button>
-    <button onclick="next()">⏭ بعدی</button>
+    <button onclick="prev()" ontouchstart="prev()">⏮ قبلی</button>
+    <button onclick="next()" ontouchstart="next()">⏭ بعدی</button>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -72,12 +67,17 @@
     const trackName = document.getElementById("track-name");
     const audioSource = document.getElementById("audioSource");
 
+    function startPlayer() {
+      document.getElementById("start").style.display = "none";
+      player.play().catch(err => console.log("Play blocked:", err));
+    }
+
     function playSong(index) {
       const song = songs[index];
       trackName.textContent = "در حال پخش: " + song.name;
       audioSource.src = song.url;
       player.load();
-      player.play();
+      player.play().catch(err => console.log("Playback error:", err));
     }
 
     function next() {
