@@ -1,41 +1,89 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mini App ساده تلگرام</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Music Player 🎵</title>
   <style>
     body {
       font-family: sans-serif;
-      text-align: center;
-      padding: 50px;
-      background-color: #f8f9fa;
+      background-color: #f0f4f8;
+      color: #222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-    h1 {
-      color: #0088cc;
+    h2 { color: #0088cc; }
+    audio {
+      width: 90%;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+    .controls {
+      margin-top: 10px;
     }
     button {
       background-color: #0088cc;
-      color: white;
       border: none;
+      color: white;
+      padding: 10px 20px;
+      margin: 5px;
       border-radius: 10px;
-      padding: 15px 30px;
-      font-size: 18px;
       cursor: pointer;
+      font-size: 16px;
     }
-    button:hover {
-      background-color: #006fa1;
-    }
+    button:hover { background-color: #006fa1; }
   </style>
 </head>
 <body>
-  <h1>👋 سلام!</h1>
-  <p>این یه مینی‌اپ خیلی ساده تلگرامه</p>
-  <button onclick="sayHello()">بزن منو 😄</button>
+  <h2>🎧 پخش‌کننده موزیک تلگرام</h2>
 
+  <p id="track-name">در حال پخش: آهنگ اول</p>
+  <audio id="player" controls>
+    <source id="audioSource" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    مرورگر شما از پخش موزیک پشتیبانی نمی‌کند.
+  </audio>
+
+  <div class="controls">
+    <button onclick="prev()">⏮ قبلی</button>
+    <button onclick="next()">⏭ بعدی</button>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    function sayHello() {
-      alert("سلام از مینی‌اپ تلگرام!");
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const songs = [
+      { name: "آهنگ اول", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+      { name: "آهنگ دوم", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+      { name: "آهنگ سوم", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+    ];
+
+    let current = 0;
+    const player = document.getElementById("player");
+    const trackName = document.getElementById("track-name");
+    const audioSource = document.getElementById("audioSource");
+
+    function playSong(index) {
+      const song = songs[index];
+      trackName.textContent = "در حال پخش: " + song.name;
+      audioSource.src = song.url;
+      player.load();
+      player.play();
+    }
+
+    function next() {
+      current = (current + 1) % songs.length;
+      playSong(current);
+    }
+
+    function prev() {
+      current = (current - 1 + songs.length) % songs.length;
+      playSong(current);
     }
   </script>
 </body>
