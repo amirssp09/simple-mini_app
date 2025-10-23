@@ -17,33 +17,58 @@
       margin: 0;
       text-align: center;
     }
-    h2 { color: #0088cc; }
+
+    h2 {
+      color: #0088cc;
+      margin-bottom: 10px;
+    }
+
+    .q {
+      font-size: larger;
+      margin-bottom: 15px;
+    }
+
     audio {
       width: 90%;
       max-width: 400px;
-      margin-top: 20px;
+      margin-top: 15px;
     }
-    .controls { margin-top: 10px; }
-    .q { font-size: larger; }
+
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
     button {
       background-color: #0088cc;
       border: none;
       color: white;
       padding: 10px 20px;
-      margin: 5px;
       border-radius: 10px;
       cursor: pointer;
       font-size: 16px;
+      transition: background-color 0.2s;
       touch-action: manipulation;
     }
-    button:active { background-color: #006fa1; }
+
+    button:hover, button:active {
+      background-color: #006fa1;
+    }
+
+    #track-name {
+      margin-top: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <h2>🎧 پخش‌کننده موزیک تلگرام</h2>
-  <p class="q">فعلاً فقط حبیب داریم تا بعد 😄</p>
+  <p class="q">فعلاً فقط آهنگ‌های حبیب داریم 😄</p>
 
   <p id="track-name">در حال پخش: آهنگ اول</p>
+
   <audio id="player" controls playsinline>
     <source id="audioSource" src="https://irsv.upmusics.com/dlw/Habib%20-%203%20Rooze%20Raftee%20(320).mp3" type="audio/mp3">
     مرورگر شما از پخش موزیک پشتیبانی نمی‌کند.
@@ -70,21 +95,16 @@
     const player = document.getElementById("player");
     const trackName = document.getElementById("track-name");
     const audioSource = document.getElementById("audioSource");
+    const nextBtn = document.getElementById("nextBtn");
+    const prevBtn = document.getElementById("prevBtn");
 
-    // تابع اصلی برای پخش آهنگ
     function playSong(index) {
       const song = songs[index];
       trackName.textContent = "در حال پخش: " + song.name;
       audioSource.src = song.url;
       player.load();
-      player.play().catch(err => console.log("Audio blocked:", err));
+      player.play().catch(err => console.log("پخش مسدود شد:", err));
     }
-
-    // دکمه‌ها با eventListener (برای موبایل مطمئن‌تر از onclick)
-    document.getElementById("nextBtn").addEventListener("touchend", next);
-    document.getElementById("prevBtn").addEventListener("touchend", prev);
-    document.getElementById("nextBtn").addEventListener("click", next);
-    document.getElementById("prevBtn").addEventListener("click", prev);
 
     function next() {
       current = (current + 1) % songs.length;
@@ -96,10 +116,19 @@
       playSong(current);
     }
 
-    // اولین لمس صفحه اجازه پخش صدا رو باز می‌کنه
-    document.body.addEventListener("touchstart", () => {
-      player.play().catch(() => {});
-    }, { once: true });
+    // هم برای دسکتاپ و هم موبایل (تلگرام)
+    nextBtn.addEventListener("click", next);
+    prevBtn.addEventListener("click", prev);
+
+    nextBtn.addEventListener("touchend", e => {
+      e.preventDefault();
+      next();
+    });
+
+    prevBtn.addEventListener("touchend", e => {
+      e.preventDefault();
+      prev();
+    });
   </script>
 </body>
 </html>
