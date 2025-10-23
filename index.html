@@ -25,6 +25,9 @@
     .controls {
       margin-top: 10px;
     }
+    .q{
+        font-size: larger;
+    }
     button {
       background-color: #0088cc;
       border: none;
@@ -40,10 +43,11 @@
 </head>
 <body>
   <h2>🎧 پخش‌کننده موزیک تلگرام</h2>
+  <p class="q">فعلا فقط حبیب داریم تا بعد</p>
 
   <p id="track-name">در حال پخش: آهنگ اول</p>
   <audio id="player" controls>
-    <source id="audioSource" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    <source id="audioSource" src="https://irsv.upmusics.com/dlw/Habib%20-%203%20Rooze%20Raftee%20(320).mp3" type="audio/mp3">
     مرورگر شما از پخش موزیک پشتیبانی نمی‌کند.
   </audio>
 
@@ -58,9 +62,9 @@
     tg.expand();
 
     const songs = [
-      { name: "آهنگ اول", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-      { name: "آهنگ دوم", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-      { name: "آهنگ سوم", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+      { name: "آهنگ اول", url: "https://irsv.upmusics.com/dlw/Habib%20-%203%20Rooze%20Raftee%20(320).mp3" },
+      { name: "آهنگ دوم", url: "https://irsv.upmusics.com/AliBZ/Mishnavi%20Sedaye%20Ghalbam%20Remix%20(320).mp3" },
+      { name: "آهنگ سوم", url: "https://irsv.upmusics.com/AliBZ/Habib%20%7C%20Bzn%20Baran%20(320).mp3" }
     ];
 
     let current = 0;
