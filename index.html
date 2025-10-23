@@ -15,6 +15,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      text-align: center;
     }
     h2 { color: #0088cc; }
     audio {
@@ -22,6 +23,8 @@
       max-width: 400px;
       margin-top: 20px;
     }
+    .controls { margin-top: 10px; }
+    .q { font-size: larger; }
     button {
       background-color: #0088cc;
       border: none;
@@ -31,29 +34,30 @@
       border-radius: 10px;
       cursor: pointer;
       font-size: 16px;
+      touch-action: manipulation;
     }
-    button:hover { background-color: #006fa1; }
+    button:active { background-color: #006fa1; }
   </style>
 </head>
 <body>
   <h2>🎧 پخش‌کننده موزیک تلگرام</h2>
-  <p>فعلاً فقط حبیب داریم تا بعد 😄</p>
+  <p class="q">فعلاً فقط حبیب داریم تا بعد 😄</p>
 
   <p id="track-name">در حال پخش: آهنگ اول</p>
-  <audio id="player" controls preload="none">
+  <audio id="player" controls playsinline>
     <source id="audioSource" src="https://irsv.upmusics.com/dlw/Habib%20-%203%20Rooze%20Raftee%20(320).mp3" type="audio/mp3">
+    مرورگر شما از پخش موزیک پشتیبانی نمی‌کند.
   </audio>
 
-  <button id="start" onclick="startPlayer()" ontouchstart="startPlayer()">▶️ شروع پخش</button>
-
   <div class="controls">
-    <button onclick="prev()" ontouchstart="prev()">⏮ قبلی</button>
-    <button onclick="next()" ontouchstart="next()">⏭ بعدی</button>
+    <button id="prevBtn">⏮ قبلی</button>
+    <button id="nextBtn">⏭ بعدی</button>
   </div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     const tg = window.Telegram.WebApp;
+    tg.ready();
     tg.expand();
 
     const songs = [
@@ -67,18 +71,20 @@
     const trackName = document.getElementById("track-name");
     const audioSource = document.getElementById("audioSource");
 
-    function startPlayer() {
-      document.getElementById("start").style.display = "none";
-      player.play().catch(err => console.log("Play blocked:", err));
-    }
-
+    // تابع اصلی برای پخش آهنگ
     function playSong(index) {
       const song = songs[index];
       trackName.textContent = "در حال پخش: " + song.name;
       audioSource.src = song.url;
       player.load();
-      player.play().catch(err => console.log("Playback error:", err));
+      player.play().catch(err => console.log("Audio blocked:", err));
     }
+
+    // دکمه‌ها با eventListener (برای موبایل مطمئن‌تر از onclick)
+    document.getElementById("nextBtn").addEventListener("touchend", next);
+    document.getElementById("prevBtn").addEventListener("touchend", prev);
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.getElementById("prevBtn").addEventListener("click", prev);
 
     function next() {
       current = (current + 1) % songs.length;
@@ -89,6 +95,11 @@
       current = (current - 1 + songs.length) % songs.length;
       playSong(current);
     }
+
+    // اولین لمس صفحه اجازه پخش صدا رو باز می‌کنه
+    document.body.addEventListener("touchstart", () => {
+      player.play().catch(() => {});
+    }, { once: true });
   </script>
 </body>
 </html>
